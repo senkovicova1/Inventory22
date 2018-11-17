@@ -9,7 +9,7 @@ import material from '../../../native-base-theme/variables/material';
 import { changePlatform, changeMaterial, closeDrawer } from '../../redux/actions/drawer';
 import styles from './style';
 
-const ITEMS = ['Items', 'Recipes','Dogshits','Inventars','Asettings'];
+const ITEMS = ['Doma', 'Záhrada','VýletDecember2018','Tajné'];
 
 class SideBar extends Component {
 
@@ -18,7 +18,7 @@ class SideBar extends Component {
     this.state = {
       shadowOffsetWidth: 1,
       shadowRadius: 4,
-      showShit:false
+      showStuff:false
     };
   }
 
@@ -29,30 +29,81 @@ class SideBar extends Component {
           bounces={false}
           style={{ flex: 1, backgroundColor: '#fff', top: -1 }}
         >
-          <ListItem button noBorder onPress={() => {this.setState( {showShit:!this.state.showShit}) }} >
+        <List>
+          <ListItem button noBorder onPress={() => { Actions.listRecipes(); this.props.closeDrawer();}} >
             <Left>
-              <Icon active name='star' style={{ color: '#777', fontSize: 26, width: 30 }} />
-              <Text style={styles.text}>Shows shit</Text>
+              <Icon active name='md-book' style={{ color: '#777', fontSize: 26, width: 30 }} />
+              <Text style={styles.text}>Recepty</Text>
             </Left>
             <Right style={{ flex: 1 }}>
-              <Badge
-                style={{ borderRadius: 3, height: 25, width: 72, backgroundColor: 'blue' }}
-              >
-                <Text style={styles.badgeText}>Baaadž</Text>
-              </Badge>
             </Right>
           </ListItem>
-        {
-          this.state.showShit &&
-          <List
-            dataArray={ITEMS} renderRow={data =>
-              <ListItem button noBorder onPress={()=>{Actions.edit();this.props.closeDrawer();}}>
-                <Left>
-                  <Icon active name='heart' style={{ color: '#777', fontSize: 26, width: 30 }} />
-                  <Text style={styles.text}>{data}</Text>
-                </Left>
-              </ListItem>}
-          />}
+
+
+            <ListItem button noBorder onPress={() => {this.setState( {showStuff:!this.state.showStuff}) }} >
+              <Left>
+                <Icon active name='md-basket' style={{ color: '#777', fontSize: 26, width: 30 }} />
+                <Text style={styles.text}>Inventáre</Text>
+              </Left>
+              <Right style={{ flex: 1 }}>
+                <Badge
+                  style={{ borderRadius: 3, height: 25, width: 72, backgroundColor: 'blue' }}
+                >
+                  <Text style={styles.badgeText}>Zmenené</Text>
+                </Badge>
+              </Right>
+            </ListItem>
+          {
+            this.state.showStuff &&
+              <List
+              dataArray={ITEMS} renderRow={data =>
+                <ListItem button noBorder onPress={()=>{ Actions.edit(); this.props.closeDrawer();}}>
+                  <Left>
+                    <Icon active name='md-cafe' style={{ color: '#777', fontSize: 26, width: 30 }} />
+                    <Text style={styles.text}>{data}</Text>
+                  </Left>
+                </ListItem> } />
+              }
+
+              {
+                this.state.showStuff &&
+
+                    <ListItem button noBorder onPress={()=>{ Actions.edit(); this.props.closeDrawer();}}>
+                      <Left>
+                        <Icon active name='md-cafe' style={{ color: '#777', fontSize: 26, width: 30 }} />
+                        <Text style={styles.text}>Batoh</Text>
+                      </Left>
+                      <Right style={{ flex: 1 }}>
+                        <Badge
+                          style={{ borderRadius: 3, height: 25, width: 72, backgroundColor: 'blue' }}
+                        >
+                          <Text style={styles.badgeText}>Zmenené</Text>
+                        </Badge>
+                      </Right>
+                    </ListItem>
+                  }
+
+              {
+                this.state.showStuff &&
+                    <Button info block onPress={()=>{ Actions.addInventory(); this.props.closeDrawer();}} >
+                     <Icon active name='md-add' style={{ color: '#fff', fontSize: 26}} />
+                    </Button>
+              }
+
+              <ListItem  noBorder >
+              </ListItem>
+
+            <ListItem button noBorder onPress={()=>{ Actions.edit(); this.props.closeDrawer();}} >
+              <Left>
+                <Icon active name='md-book' style={{ color: '#777', fontSize: 26, width: 30 }} />
+                <Text style={styles.text}>Nastavenia</Text>
+              </Left>
+              <Right style={{ flex: 1 }}>
+              </Right>
+            </ListItem>
+
+
+        </List>
 
         </Content>
       </Container>

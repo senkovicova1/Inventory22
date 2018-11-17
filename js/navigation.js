@@ -10,8 +10,14 @@ import getTheme from '../native-base-theme/components';
 import material from '../native-base-theme/variables/material';
 import { closeDrawer } from './redux/actions';
 
-import List from './components/list';
+import ListRecipes from './components/listRecipes';
+import ListInventory from './components/listInventory';
 import Edit from './components/edit';
+import AddRecipe from './components/addRecipe';
+import DetailRecipe from './components/detailRecipe';
+
+import AddInventory from './components/addInventory';
+import EditInventory from './components/editInventory';
 
 import Sidebar from './components/sidebar';
 
@@ -74,8 +80,13 @@ class AppNavigator extends Component {
         >
           <RouterWithRedux>
             <Scene key="root">
-              <Scene key="list" component={List} hideNavBar initial={true} />
+             <Scene key="list" component={ListRecipes} />
+              <Scene key="listInv" component={ListInventory}  hideNavBar initial={true} />
               <Scene key="edit" component={Edit}/>
+              <Scene key="add" component={AddRecipe}/>
+              <Scene key="detail" component={DetailRecipe}  />
+              <Scene key="addInv" component={AddInventory} />
+              <Scene key="editInv" component={EditInventory} />
             </Scene>
           </RouterWithRedux>
         </Drawer>
