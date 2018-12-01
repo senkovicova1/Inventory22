@@ -7,6 +7,12 @@ import { Actions } from 'react-native-router-flux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
+const ACC_VIO = 'rgb(124, 90, 150)';
+const ACC_CREAM = 'rgb(252, 244, 217)';
+const ACC_PEACH = 'rgb(255, 184, 95)';
+const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
+const ACC_TEAL = 'rgb(142, 210, 210)';
+const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
 
 class Header6 extends Component {  // eslint-disable-line
   constructor(props) {
@@ -25,29 +31,28 @@ class Header6 extends Component {  // eslint-disable-line
     console.log(this.props);
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: ACC_TEAL}}>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>
-              <Icon name="md-close" />
+              <Icon name="md-close" style={{ color: ACC_DARK_TEAL}}/>
             </Button>
           </Left>
           <Body>
-            <Title>New Inventory</Title>
+            <Title style={{ color: ACC_DARK_TEAL}}>New Inventory</Title>
           </Body>
           <Right>
-            <Button transparent><Icon name="md-checkmark" onPress={()=>Actions.pop()} /></Button>
+            <Button transparent><Icon name="md-checkmark" style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.pop()} /></Button>
           </Right>
         </Header>
 
-        <Content>
+        <Content padder style={{ backgroundColor: ACC_CREAM}} >
 
-          <Form>
             <Item floatingLabel>
-               <Label>Title</Label>
-               <Input />
+               <Label style={{ color: ACC_DARK_PEACH }}>Title</Label>
+               <Input style={{ color: ACC_DARK_PEACH }}/>
              </Item>
-              <Textarea rowSpan={6} bordered placeholder="Notes" />
-            </Form>
+              <Textarea rowSpan={6} style={{ color: ACC_CREAM, backgroundColor: ACC_PEACH }} bordered placeholder="Notes" />
+
         </Content>
       </Container>
     );

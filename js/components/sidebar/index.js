@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Image, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { Content, Text, List, ListItem, Icon, Container, Left, Right, Badge, Button, View, StyleProvider, getTheme, variables } from 'native-base';
+import { Content, Text, List, ListItem, Icon, Container, Thumbnail, Left, Right, Badge, Button, View, StyleProvider, getTheme, variables } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 
 import material from '../../../native-base-theme/variables/material';
@@ -10,6 +10,12 @@ import { changePlatform, changeMaterial, closeDrawer } from '../../redux/actions
 import styles from './style';
 
 const ITEMS = ['Doma', 'Záhrada','VýletDecember2018','Tajné'];
+
+const ACC_VIO = 'rgb(69, 41, 92)';
+const ACC_PEACH = 'rgb(255, 184, 95)';
+const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
+const ACC_TEAL = 'rgb(142, 210, 210)';
+const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
 
 class SideBar extends Component {
 
@@ -27,12 +33,12 @@ class SideBar extends Component {
       <Container>
         <Content
           bounces={false}
-          style={{ flex: 1, backgroundColor: '#fff', top: -1 }}
+          style={{ flex: 1, backgroundColor: ACC_VIO, top: -1 }}
         >
         <List>
-          <ListItem button noBorder onPress={() => { Actions.listRecipes(); this.props.closeDrawer();}} >
+          <ListItem button noBorder onPress={() => { Actions.listRec(); this.props.closeDrawer();}} >
             <Left>
-              <Icon active name='md-book' style={{ color: '#777', fontSize: 26, width: 30 }} />
+              <Icon active name='md-book' style={styles.sidebarIcon} />
               <Text style={styles.text}>Recepty</Text>
             </Left>
             <Right style={{ flex: 1 }}>
@@ -42,14 +48,14 @@ class SideBar extends Component {
 
             <ListItem button noBorder onPress={() => {this.setState( {showStuff:!this.state.showStuff}) }} >
               <Left>
-                <Icon active name='md-basket' style={{ color: '#777', fontSize: 26, width: 30 }} />
+                <Icon active name='md-basket' style={styles.sidebarIcon} />
                 <Text style={styles.text}>Inventáre</Text>
               </Left>
               <Right style={{ flex: 1 }}>
                 <Badge
-                  style={{ borderRadius: 3, height: 25, width: 72, backgroundColor: 'blue' }}
+                  style={{ borderRadius: 3, height: 25, width: 72, backgroundColor: ACC_TEAL }}
                 >
-                  <Text style={styles.badgeText}>Zmenené</Text>
+                  <Text style={{fontSize: (Platform.OS === 'ios') ? 13 : 11, textAlign: 'center', marginTop: (Platform.OS === 'android') ? -3 : undefined, color: ACC_VIO}}>Zmenené</Text>
                 </Badge>
               </Right>
             </ListItem>
@@ -57,10 +63,13 @@ class SideBar extends Component {
             this.state.showStuff &&
               <List
               dataArray={ITEMS} renderRow={data =>
-                <ListItem button noBorder onPress={()=>{ Actions.edit(); this.props.closeDrawer();}}>
+                <ListItem button noBorder  onPress={()=>{ Actions.listInv(); this.props.closeDrawer();}}>
                   <Left>
-                    <Icon active name='md-cafe' style={{ color: '#777', fontSize: 26, width: 30 }} />
-                    <Text style={styles.text}>{data}</Text>
+                    <Thumbnail
+                      style={styles.stretch}
+                      source={require('../../../sushi.jpg')}
+                    />
+                    <Text style={{ color: ACC_DARK_PEACH }}>{data}</Text>
                   </Left>
                 </ListItem> } />
               }
@@ -68,16 +77,19 @@ class SideBar extends Component {
               {
                 this.state.showStuff &&
 
-                    <ListItem button noBorder onPress={()=>{ Actions.edit(); this.props.closeDrawer();}}>
+                    <ListItem button noBorder onPress={()=>{ Actions.listInv(); this.props.closeDrawer();}}>
                       <Left>
-                        <Icon active name='md-cafe' style={{ color: '#777', fontSize: 26, width: 30 }} />
-                        <Text style={styles.text}>Batoh</Text>
+                        <Thumbnail
+                          style={styles.stretch}
+                          source={require('../../../sushi.jpg')}
+                        />
+                        <Text style={{ color: ACC_DARK_PEACH }}>Batoh</Text>
                       </Left>
                       <Right style={{ flex: 1 }}>
                         <Badge
-                          style={{ borderRadius: 3, height: 25, width: 72, backgroundColor: 'blue' }}
+                          style={{ borderRadius: 3, height: 25, width: 72, backgroundColor: ACC_TEAL  }}
                         >
-                          <Text style={styles.badgeText}>Zmenené</Text>
+                          <Text style={{fontSize: (Platform.OS === 'ios') ? 13 : 11, textAlign: 'center', marginTop: (Platform.OS === 'android') ? -3 : undefined, color: ACC_VIO}}>Zmenené</Text>
                         </Badge>
                       </Right>
                     </ListItem>
@@ -85,17 +97,17 @@ class SideBar extends Component {
 
               {
                 this.state.showStuff &&
-                    <Button info block onPress={()=>{ Actions.addInventory(); this.props.closeDrawer();}} >
-                     <Icon active name='md-add' style={{ color: '#fff', fontSize: 26}} />
+                    <Button block style={{ backgroundColor: ACC_PEACH }}  onPress={()=>{ Actions.addInv(); this.props.closeDrawer();}} >
+                     <Icon active name='md-add' style={{ color: ACC_VIO, fontSize: 26}} />
                     </Button>
               }
 
               <ListItem  noBorder >
               </ListItem>
 
-            <ListItem button noBorder onPress={()=>{ Actions.edit(); this.props.closeDrawer();}} >
+            <ListItem button noBorder onPress={()=>{ Actions.editRec(); this.props.closeDrawer();}} >
               <Left>
-                <Icon active name='md-book' style={{ color: '#777', fontSize: 26, width: 30 }} />
+                <Icon active name='md-settings' style={styles.sidebarIcon} />
                 <Text style={styles.text}>Nastavenia</Text>
               </Left>
               <Right style={{ flex: 1 }}>

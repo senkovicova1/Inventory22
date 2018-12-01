@@ -6,10 +6,14 @@ const { StyleSheet, Platform, Dimensions } = React;
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
 
+const ACC_VIO = 'rgb(69, 41, 92)';
+const ACC_CREAM = 'rgb(252, 244, 217)';
+const ACC_PEACH = 'rgb(255, 184, 95)';
+
 export default {
   sidebar: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: ACC_PEACH,
   },
   drawerCover: {
     alignSelf: 'stretch',
@@ -42,8 +46,9 @@ export default {
     paddingTop: (Platform.OS === 'android') ? 7 : 5,
   },
   sidebarIcon: {
-    fontSize: 21,
-    color: '#fff',
+    fontSize: 26,
+    width: 30,
+    color: ACC_PEACH,
     lineHeight: (Platform.OS === 'android') ? 21 : 25,
     backgroundColor: 'transparent',
     alignSelf: 'center',
@@ -52,6 +57,7 @@ export default {
     fontWeight: (Platform.OS === 'ios') ? '500' : '400',
     fontSize: 16,
     marginLeft: 20,
+    color: ACC_PEACH,
   },
   badgeText: {
     fontSize: (Platform.OS === 'ios') ? 13 : 11,
@@ -59,4 +65,8 @@ export default {
     textAlign: 'center',
     marginTop: (Platform.OS === 'android') ? -3 : undefined,
   },
+  stretch: {
+    width: 30,
+    height: 30
+  }
 };

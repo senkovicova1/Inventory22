@@ -7,6 +7,12 @@ import { Actions } from 'react-native-router-flux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
+const ACC_VIO = 'rgb(124, 90, 150)';
+const ACC_CREAM = 'rgb(252, 244, 217)';
+const ACC_PEACH = 'rgb(255, 184, 95)';
+const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
+const ACC_TEAL = 'rgb(142, 210, 210)';
+const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
 
 const ITEMS = [
   {name:"Sushi ryža",
@@ -45,22 +51,22 @@ class Header6 extends Component {  // eslint-disable-line
     console.log(this.props);
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: ACC_TEAL}}>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>
-              <Icon name="arrow-back" />
+              <Icon name="md-close" style={{ color: ACC_DARK_TEAL}}/>
             </Button>
           </Left>
           <Body>
-            <Title>Sushi</Title>
+            <Title style={{ color: ACC_DARK_TEAL}}>Sushi</Title>
           </Body>
           <Right>
-            <Button transparent><Icon name="md-checkmark" onPress={()=>Actions.pop()} /></Button>
+            <Button transparent><Icon name="md-checkmark" style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.pop()} /></Button>
           </Right>
 
         </Header>
 
-        <Content>
+        <Content padder style={{ backgroundColor: ACC_CREAM}} >
 
           <Form>
                  {
@@ -68,7 +74,7 @@ class Header6 extends Component {  // eslint-disable-line
                        <Picker
                          mode="dropdown"
                          iosIcon={<Icon name="ios-arrow-down-outline" />}
-                         style={{ width: undefined }}
+                         style={{ width: undefined, color: ACC_DARK_PEACH }}
                          placeholder="Select your SIM"
                          placeholderStyle={{ color: "#bfc6ea" }}
                          placeholderIconColor="#007aff"
@@ -85,7 +91,7 @@ class Header6 extends Component {  // eslint-disable-line
                     <Picker
                       mode="dropdown"
                        iosIcon={<Icon name="ios-arrow-down-outline" />}
-                      style={{ width: undefined }}
+                      style={{ width: undefined, color: ACC_DARK_PEACH}}
                       placeholder="Ďalšia ingrediencia"
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"
@@ -97,7 +103,7 @@ class Header6 extends Component {  // eslint-disable-line
                         )}
                     </Picker>
 
-                  <Textarea rowSpan={6} bordered placeholder="Ryžu dajte doryžovarky a uvarte podľa návodu. Medzitým do hrnčeka nalejte ryžový ocot so soľou a cukrom a nechajte zovrieť. Cukor aj soľ by mali byť úplne rozspustené. Keď je ryža hotová, zmiešajte ju s prevareným octom a nechajte vychladnúť. Potom zrolujte sushi podľa youtube návodov.
+                  <Textarea rowSpan={6} bordered style={{ backgroundColor: ACC_PEACH, color: ACC_CREAM }} placeholder="Ryžu dajte doryžovarky a uvarte podľa návodu. Medzitým do hrnčeka nalejte ryžový ocot so soľou a cukrom a nechajte zovrieť. Cukor aj soľ by mali byť úplne rozspustené. Keď je ryža hotová, zmiešajte ju s prevareným octom a nechajte vychladnúť. Potom zrolujte sushi podľa youtube návodov.
 
                    DO NOT FORGET: Sonka má rada menšie kúsky, Theri väčšie." />
             </Form>

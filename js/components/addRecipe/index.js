@@ -9,6 +9,13 @@ import { openDrawer } from '../../redux/actions/drawer';
 
 const DB = ["---","Basmati ryža","Sushi ryža", "Hl. múka", "Jablká", "Jahody", "Polotovarové palacinky", "Čerstvý losos", "Čokoláda", "Avokádo", "Ryžový ocot", "Cukor", "Soľ", "Sójovka"]
 
+const ACC_VIO = 'rgb(124, 90, 150)';
+const ACC_CREAM = 'rgb(252, 244, 217)';
+const ACC_PEACH = 'rgb(255, 184, 95)';
+const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
+const ACC_TEAL = 'rgb(142, 210, 210)';
+const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
+const ACC_WHITE= 'rgb(255, 255, 255)';
 
 class Header6 extends Component {  // eslint-disable-line
   constructor(props) {
@@ -27,32 +34,40 @@ class Header6 extends Component {  // eslint-disable-line
     console.log(this.props);
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: ACC_TEAL}}>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>
-              <Icon name="md-close" />
+              <Icon name="md-close" style={{ color: ACC_DARK_TEAL}}/>
             </Button>
           </Left>
           <Body>
-            <Title>New Recipe</Title>
+            <Title style={{ color: ACC_DARK_TEAL}}>New Recipe</Title>
           </Body>
           <Right>
-            <Button transparent><Icon name="md-checkmark" onPress={()=>Actions.pop()} /></Button>
+            <Button transparent><Icon name="md-checkmark"  style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.pop()} /></Button>
           </Right>
 
         </Header>
 
-        <Content>
+        <Content style={{ backgroundColor: ACC_CREAM}} >
 
-          <Form>
-            <Item floatingLabel>
-               <Label>Title</Label>
-               <Input />
+
+            <Item floatingLabeldsfsff>
+               <Label style={{ color: ACC_DARK_PEACH}}>Title</Label>
+               <Input style={{ color: ACC_DARK_PEACH}}/>
              </Item>
+
+             <Card>
+               <CardItem header button onPress={() => alert("This is Card Header")} style={{color: ACC_PEACH}} icenleft>
+                 <Icon name='md-add' style={{color: ACC_PEACH}}/>
+                 <Text style={{color: ACC_PEACH}}>Add Image</Text>
+               </CardItem>
+            </Card>
+
                 <Picker
                   mode="dropdown"
                    iosIcon={<Icon name="ios-arrow-down-outline" />}
-                  style={{ width: undefined }}
+                  style={{ width: undefined, color: ACC_DARK_PEACH }}
                   placeholder="Ďalšia ingrediencia"
                   placeholderStyle={{ color: "#bfc6ea" }}
                   placeholderIconColor="#007aff"
@@ -64,11 +79,12 @@ class Header6 extends Component {  // eslint-disable-line
                     )}
                 </Picker>
 
+
                 {this.state.selected2 &&
                   <Picker
                     mode="dropdown"
                      iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    style={{ width: undefined }}
+                    style={{ width: undefined, color: ACC_DARK_PEACH }}
                     placeholder="Ďalšia ingrediencia"
                     placeholderStyle={{ color: "#bfc6ea" }}
                     placeholderIconColor="#007aff"
@@ -81,8 +97,8 @@ class Header6 extends Component {  // eslint-disable-line
                   </Picker>
                 }
 
-              <Textarea rowSpan={6} bordered placeholder="Notes" />
-            </Form>
+              <Textarea rowSpan={6} bordered style={{ backgroundColor: ACC_WHITE, color: ACC_CREAM}}  placeholder="Notes" />
+
         </Content>
       </Container>
     );

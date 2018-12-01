@@ -10,4 +10,7 @@ export default{
   mb10: {
     marginBottom: 10,
   },
+  stretch: {
+     height: 30,
+  }
 };

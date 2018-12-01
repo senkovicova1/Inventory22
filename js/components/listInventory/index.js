@@ -1,11 +1,18 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Container, Header, Title, Content, Button, Icon, Left, Right, Body, Text, List, ListItem, CheckBox, Grid, Col, Badge, Form, Label, Input, Item } from 'native-base';
+import { Container, Header, Title, Content, Button, Icon, Left, Right, Card, CardItem, Body, Text, List, ListItem, CheckBox, Grid, Col, Badge, Form, Label, Input, Item } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
+
+const ACC_VIO = 'rgb(124, 90, 150)';
+const ACC_CREAM = 'rgb(252, 244, 217)';
+const ACC_PEACH = 'rgb(255, 184, 95)';
+const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
+const ACC_TEAL = 'rgb(142, 210, 210)';
+const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
 
 const DB = [
   {name:"Basmati ryža",
@@ -41,33 +48,37 @@ class Header6 extends Component {  // eslint-disable-line
   render() {
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: ACC_TEAL}}>
           <Left>
             <Button transparent onPress={() => this.props.openDrawer()}>
-              <Icon name="menu" />
+              <Icon name="menu" style={{ color: ACC_DARK_TEAL}} />
             </Button>
           </Left>
           <Body>
-              <Title>Doma</Title>
+              <Title style={{ color: ACC_DARK_TEAL}}>Doma</Title>
           </Body>
           <Right>
-            <Button transparent><Icon name="search" style={{ color:"#fff" }} /></Button>
-            <Button transparent><Icon name="md-create" onPress={()=>Actions.editInventory({nom:'jedlo'})} /></Button>
+            <Button transparent><Icon name="search" style={{ color: ACC_DARK_TEAL}}/></Button>
+            <Button transparent><Icon name="md-create" style={{ color: ACC_DARK_TEAL}}/></Button>
           </Right>
 
         </Header>
 
-        <Content padder>
-          <Text>Sonkin domáci inventár</Text>
-          <Text></Text>
-          <Button info block onPress={()=> Actions.addInventory()} >
-            <Icon active name='md-add' style={{ color: '#fff', fontSize: 26}} />
+        <Content padder style={{ backgroundColor: ACC_CREAM}}>
+          <Button transparent onPress={()=>Actions.editInv({nom:'jedlo'})} >
+            <Text style={{ color: ACC_DARK_PEACH }}>Sonkin domáci inventár</Text>
+            <Right>
+              <Icon name="md-create" style={{ color: ACC_DARK_PEACH, fontSize: 20}} />
+            </Right>
+          </Button>
+          <Button style={{ backgroundColor: ACC_PEACH }} full onPress={()=> Actions.addInv()} >
+            <Icon active name='md-add' style={{ color: ACC_DARK_PEACH, fontSize: 26}} />
           </Button>
           <List
             dataArray={DB} renderRow={data =>
-              <ListItem button noBorder onPress={() => Actions.detailRecipe() }>
-                <Left><Text>{data.name}</Text></Left>
-                <Right><Text>{data.amount}</Text></Right>
+              <ListItem noBorder>
+                <Left><Text style={{ color: ACC_DARK_PEACH }}>{data.name}</Text></Left>
+                <Right><Text style={{ color: ACC_DARK_PEACH }}>{data.amount}</Text></Right>
               </ListItem>
             }
           />
