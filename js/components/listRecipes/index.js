@@ -8,6 +8,9 @@ import styles from './styles';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
+import { rebase } from '../../../index.android';
+//import firebase from 'firebase';
+
 const ACC_VIO = 'rgb(124, 90, 150)';
 const ACC_CREAM = 'rgb(252, 244, 217)';
 const ACC_PEACH = 'rgb(255, 184, 95)';
@@ -43,9 +46,26 @@ class Header6 extends Component {  // eslint-disable-line
   constructor(props) {
     super(props);
     this.state = {
-      selected: "key1"
+      selected: "key1",
+      recipes: [],
     };
   }
+
+  componentDidMount(){
+    rebase.syncState(`recipes`, {
+      context: this,
+      state: 'recipes',
+      withIds: true,
+      asArray: true
+    });
+  }
+
+  addItem(newItem){
+    this.setState({
+      recipes: this.state.recipes.concat([newItem]) //updates Firebase and the local state
+    });
+  }
+
   onValueChange(value: string) {
     this.setState({
       selected: value
@@ -53,6 +73,7 @@ class Header6 extends Component {  // eslint-disable-line
   }
 
   render() {
+    console.log(this.state.data);
     return (
       <Container>
         <Header style={{ backgroundColor: ACC_TEAL}}>
@@ -88,22 +109,26 @@ class Header6 extends Component {  // eslint-disable-line
 
 
           <List
-            dataArray={ITEMS} renderRow={data =>
-              <ListItem button noBorder onPress={() => Actions.detailRec() }>
+            dataArray={this.state.recipes} renderRow={data =>
+              <ListItem button noBorder onPress={() => Actions.detailRec({recId: data.key, recName: data.name, recSteps: data.postup}) }>
                 <Left>
                   <Thumbnail
                     style={styles.stretch}
                     source={require('../../../sushi.jpg')}
                   />
-                <Text style={{ color: ACC_DARK_PEACH }}>{data.title}</Text></Left>
+                <Text style={{ color: ACC_DARK_PEACH }}>{data.name}</Text></Left>
                 <Right>
                       <Badge style={{ borderRadius: 3, backgroundColor: ACC_VIO }}>
-                        <Text style={{ color: ACC_CREAM }}>{data.amount} {data.amount == 1 ? "porcia" : (data.amount <= 4? "porcie" : "porcií")}</Text>
-                      </Badge>
+                        <Text style={{ color: ACC_CREAM }}> </Text>
+
+                  { /*   <Text style={{ color: ACC_CREAM }}>{data.id} {data.id == 1 ? "porcia" : (data.id <= 4? "porcie" : "porcií")}</Text>*/}
+                 </Badge>
                 </Right>
               </ListItem>
             }
           />
+
+
         </Content>
       </Container>
     );

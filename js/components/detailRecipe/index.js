@@ -9,6 +9,8 @@ import styles from './styles';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
+import { rebase } from '../../../index.android';
+
 const ACC_VIO = 'rgb(124, 90, 150)';
 const ACC_CREAM = 'rgb(252, 244, 217)';
 const ACC_PEACH = 'rgb(255, 184, 95)';
@@ -39,14 +41,37 @@ class Header6 extends Component {  // eslint-disable-line
       super(props);
       this.state = {
         selected: "key1",
-        show: false
+        show: false,
+        ingredients: [],
+        name: this.props.recName,
+        key: this.props.recId,
+        postup: this.props.recSteps,
       };
+
+        rebase.fetch(`recipes/${this.props.recId}/ingrediencie`, {
+            context: this,
+            withIds: true,
+            asArray: true,
+          }).then((ings) => {rebase.fetch(`ingredients`, {
+              context: this,
+              withIds: true,
+              asArray: true,
+            }).then((allIngs) => {
+              let ids = ings.map(i => i.key);
+              let filterred = allIngs.filter(i => ids.includes(i.key)).map(ing => { let k = {name: ing.name, key: ing.key, amount: ings.filter(i => i.key === ing.key)[0].amount}; return k;});
+              this.setState({
+                ingredients: filterred,
+              })
+            })
+          });
     }
+
     onValueChange(value: string) {
       this.setState({
         selected: value
       });
     }
+
     onOff() {
       this.setState({
         show: !this.state.show,
@@ -63,7 +88,7 @@ class Header6 extends Component {  // eslint-disable-line
             </Button>
           </Left>
           <Body>
-            <Title style={{ color: ACC_DARK_TEAL}} >Sushi</Title>
+            <Title style={{ color: ACC_DARK_TEAL}} >{this.state.name}</Title>
           </Body>
           <Right>
             <Button transparent><Icon name="md-more" style={{ color: ACC_DARK_TEAL}} onPress={()=> this.setState({show: true })}/><Text></Text></Button>
@@ -99,8 +124,8 @@ class Header6 extends Component {  // eslint-disable-line
                 />
             </ListItem>
          {
-           ITEMS.map(item => {return (
-             <ListItem noBorder key={item.name}>
+           this.state.ingredients.map(item => {return (
+             <ListItem noBorder key={item.key}>
                <Left>
                <Thumbnail
                  style={styles.thumbnl}
@@ -122,10 +147,7 @@ class Header6 extends Component {  // eslint-disable-line
           </ListItem>
 
             <ListItem>
-                <Text style={{ color: ACC_DARK_PEACH }}>Ryžu dajte doryžovarky a uvarte podľa návodu. Medzitým do hrnčeka nalejte ryžový ocot so soľou a cukrom a nechajte zovrieť. Cukor aj soľ by mali byť úplne rozspustené. Keď je ryža hotová, zmiešajte ju s prevareným octom a nechajte vychladnúť. Potom zrolujte sushi podľa youtube návodov.</Text>
-            </ListItem>
-            <ListItem>
-                <Text style={{ color: ACC_DARK_PEACH }}> DO NOT FORGET: Sonka má rada menšie kúsky, Theri väčšie. </Text>
+                <Text style={{ color: ACC_DARK_PEACH }}> {this.props.recSteps}</Text>
             </ListItem>
          </List>
         </Content>
