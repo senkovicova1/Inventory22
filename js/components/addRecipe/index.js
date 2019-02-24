@@ -31,7 +31,12 @@ class Header6 extends Component {  // eslint-disable-line
         title: "",
         body: "",
         ingredients: [],
-        chosenIgredients: [],
+        chosenIgredientsName: {},
+        chosenIgredientsAmount: {},
+        chosenIgredientsUnit: {},
+        newIngredientName: "",
+        newIngredientAmount: "",
+        newIngredientUnit: "",
 
         writtenCode: "",
         validCode: "",
@@ -40,11 +45,17 @@ class Header6 extends Component {  // eslint-disable-line
 
         selected2: undefined,
 
+        searchOpen: false,
+
         viaCode: false,
         viaForm: false,
       };
 
+  //    this.toggleSearch.bind(this);
 
+      this.addNewIngredient.bind(this);
+      this.handleWrittenCode.bind(this);
+      this.handleTitle.bind(this);
       this.toggleCode.bind(this),
       this.toggleForm.bind(this),
       this.fetch.bind(this);
@@ -117,13 +128,36 @@ class Header6 extends Component {  // eslint-disable-line
       }
     }
 
-    handleWrittenCode(text){
+    handleTitle(text){
       this.setState({
         title: text,
       });
     }
 
+    toggleSearch(){
+      this.setState({
+        searchOpen: !this.state.searchOpen,
+      });
+    }
+
+    addNewIngredient(){
+      if (this.state.newIngredientName !== ""
+      && this.state.newIngredientUnit !== ""
+      && this.state.newIngredientAmount !== ""){
+          let index = this.state.ingredients.filter(ing => ing.name === this.state.newIngredientName)[0].key;
+          this.setState({
+            chosenIgredientsUnit[index]: this.state.newIngredientName,
+            chosenIgredientsUnit[index]: this.state.newIngredientUnit,
+            chosenIgredientsAmount[index]: this.state.newIngredientAmount,
+            newIngredientName: "",
+            newIngredientUnit: "",
+            newIngredientAmount: "",
+          });
+      }
+    }
+
   render() {
+
     return (
       <Container>
         <Header style={{ backgroundColor: ACC_TEAL}}>
@@ -177,6 +211,127 @@ class Header6 extends Component {  // eslint-disable-line
                   placeholder="Enter name"
                   onChangeText={(text) => this.handleTitle(text)}/>
               </Item>
+
+                {
+                  Object.keys(this.state.chosenIgredientsAmount).map(key =>
+                    <Item>
+                      <Picker
+                        mode="dropdown"
+                        style={{ width: "50%", color: ACC_DARK_PEACH }}
+                        selectedValue={this.state.chosenIgredientsName[key]}
+                        onValueChange={(itemValue, itemIndex) => this.setState({
+                                           chosenIgredientsName[key]: itemValue
+                                         })
+                        }>
+                        <Picker.Item key="0" label="" value=""/>
+                          {
+                            this.state.ingredients.map(ingredient =>
+                                <Picker.Item key={ingredient.key} label={ingredient.name} value={ingredient.name} />
+                            )
+                          }
+                        </Picker>
+
+                        <Input
+                          style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
+                          placeholder=""
+                          onChangeText={(text) =>
+                            this.setState({
+                              chosenIgredientsAmount[key]: text,
+                            })
+
+                          }/>
+
+                        <Picker
+                           mode="dropdown"
+                           style={{width: '25%', color: ACC_TEAL /*, borderBottomWidth:10, borderBottomColor: ACC_PINK*/}}
+                           selectedValue={this.state.newIngredientUnit}
+                           onValueChange={(itemValue, itemIndex) =>
+                                            this.setState({
+                                              chosenIgredientsUnit: itemValue
+                                            })
+                        }>
+                          <Picker.Item key="0" label="" value=""/>
+
+                          <Picker.Item key="1" label="ml" value="ml"/>
+                          <Picker.Item key="2" label="dcl" value="dcl"/>
+                          <Picker.Item key="3" label="l" value="l"/>
+
+                          <Picker.Item key="4" label="g" value="g"/>
+                          <Picker.Item key="4" label="dkg" value="dkg"/>
+                          <Picker.Item key="5" label="kg" value="kg"/>
+
+                          <Picker.Item key="6" label="pcs" value="pcs"/>
+
+                          <Picker.Item key="7" label="tsp" value="tsp"/>
+                          <Picker.Item key="8" label="tbsp" value="tbsp"/>
+
+                          <Picker.Item key="9" label="cup" value="cup"/>
+                         </Picker>
+
+                          <Icon name='md-remove-circle' style={{color: ACC_DARK_PEACH}} onPress={() => this.removeIngredient(key)}/>
+
+                    </Item>
+                  )}
+
+                  <Item>
+
+                    <Picker
+                      mode="dropdown"
+                      style={{ width: "50%", color: ACC_DARK_PEACH }}
+                      selectedValue={this.state.newIngredientName}
+                      onValueChange={(itemValue, itemIndex) => this.setState({
+                                         newIngredientName: itemValue
+                                       })
+                      }>
+                      <Picker.Item key="0" label="" value=""/>
+                        {
+                          this.state.ingredients.map(ingredient =>
+                              <Picker.Item key={ingredient.key} label={ingredient.name} value={ingredient.name} />
+                          )
+                        }
+                      </Picker>
+
+                      <Input
+                        style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
+                        placeholder=""
+                        onChangeText={(text) =>
+                          this.setState({
+                            newIngredientAmount: text
+                          })
+
+                        }/>
+
+                      <Picker
+                         mode="dropdown"
+                         style={{width: '25%', color: ACC_TEAL /*, borderBottomWidth:10, borderBottomColor: ACC_PINK*/}}
+                         selectedValue={this.state.newIngredientUnit}
+                         onValueChange={(itemValue, itemIndex) =>
+                                          this.setState({
+                                            newIngredientUnit: itemValue
+                                          })
+                      }>
+                        <Picker.Item key="0" label="" value=""/>
+
+                        <Picker.Item key="1" label="ml" value="ml"/>
+                        <Picker.Item key="2" label="dcl" value="dcl"/>
+                        <Picker.Item key="3" label="l" value="l"/>
+
+                        <Picker.Item key="4" label="g" value="g"/>
+                        <Picker.Item key="4" label="dkg" value="dkg"/>
+                        <Picker.Item key="5" label="kg" value="kg"/>
+
+                        <Picker.Item key="6" label="pcs" value="pcs"/>
+
+                        <Picker.Item key="7" label="tsp" value="tsp"/>
+                        <Picker.Item key="8" label="tbsp" value="tbsp"/>
+
+                        <Picker.Item key="9" label="cup" value="cup"/>
+                       </Picker>
+
+                        <Icon name='md-add' style={{color: ACC_DARK_PEACH}} onPress={this.addNewIngredient.bind(this)}/>
+
+                  </Item>
+
             </Form>
           }
 
