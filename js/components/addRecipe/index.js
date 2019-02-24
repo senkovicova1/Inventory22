@@ -167,6 +167,10 @@ class Header6 extends Component {  // eslint-disable-line
     }
 
   render() {
+      const PICKER_ITEMS = this.state.ingredients.map(ingredient =>
+            <Picker.Item key={ingredient.key} label={ingredient.name} value={ingredient.name} />
+        );
+       PICKER_ITEMS.unshift(<Picker.Item key="0" label="" value=""/>);
 
     return (
       <Container>
@@ -222,94 +226,92 @@ class Header6 extends Component {  // eslint-disable-line
                   onChangeText={(text) => this.handleTitle(text)}/>
               </Item>
 
-                {
-                  Object.keys(this.state.chosenIgredientsAmount).map(key =>
-                    <Item>
-                      <Picker
-                        mode="dropdown"
-                        style={{ width: "50%", color: ACC_DARK_PEACH }}
-                        selectedValue={this.state.chosenIgredientsName[key]}
-                        onValueChange={(itemValue, itemIndex) => {
-                                        let newChosenIingredientsName = {...this.state.chosenIgredientsName};
-                                        newChosenIingredientsName[key] = itemValue;
-                                        this.setState({
-                                           chosenIgredientsName: newChosenIingredientsName,
-                                         });
-                                       }
-                        }>
-                        <Picker.Item key="0" label="" value=""/>
-                          {
-                            this.state.ingredients.map(ingredient =>
-                                <Picker.Item key={ingredient.key} label={ingredient.name} value={ingredient.name} />
-                            )
+
+              {
+                Object.keys(this.state.chosenIgredientsName).map(key =>
+                  <Item>
+                    <Picker
+                      mode="dropdown"
+                      style={{ width: "50%", color: ACC_DARK_PEACH }}
+                      selectedValue={this.state.chosenIgredientsName[key]}
+                      onValueChange={(itemValue, itemIndex) => {
+                                      console.log("1");
+                                      let newChosenIingredientsName = {...this.state.chosenIgredientsName};
+                                      console.log("2");
+                                      newChosenIingredientsName[key] = itemValue;
+                                      console.log("3");
+                                      this.setState({
+                                         chosenIgredientsName: newChosenIingredientsName,
+                                       });
+                                     }
+                      }>
+                        {PICKER_ITEMS}
+                      </Picker>
+                      <Input
+                        style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
+                        value={this.state.chosenIgredientsAmount[key]}
+                        placeholder=""
+                        onChangeText={(text) =>{
+                              let newChosenIingredientsAmount = {...this.state.chosenIgredientsAmount};
+                              newChosenIingredientsAmount[key] = text;
+                              this.setState({
+                                chosenIgredientsAmount: newChosenIgredientsAmount,
+                              });
                           }
-                        </Picker>
+                        }/>
 
-                        <Input
-                          style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
-                          placeholder=""
-                          onChangeText={(text) =>{
-                                let newChosenIingredientsAmount = {...this.state.chosenIgredientsAmount};
-                                newChosenIingredientsAmount[key] = itemValue;
-                                this.setState({
-                                  chosenIgredientsAmount: newChosenIgredientsAmount,
-                                });
-                            }
-                          }/>
+                      <Picker
+                         mode="dropdown"
+                         style={{width: '25%', color: ACC_TEAL }}
+                         selectedValue={this.state.chosenIgredientsUnit[key]}
+                         onValueChange={(itemValue, itemIndex) =>{
+                                         let newChosenIingredientsUnitt = {...this.state.chosenIgredientsUnit};
+                                         newChosenIingredientsUnitt[key] = itemValue;
+                                          this.setState({
+                                            chosenIgredientsUnit: newChosenIingredientsUnit,
+                                          });
+                                        }
+                      }>
+                        <Picker.Item key="0" label="" value=""/>
 
-                        <Picker
-                           mode="dropdown"
-                           style={{width: '25%', color: ACC_TEAL /*, borderBottomWidth:10, borderBottomColor: ACC_PINK*/}}
-                           selectedValue={this.state.newIngredientUnit}
-                           onValueChange={(itemValue, itemIndex) =>
-                                            this.setState({
-                                              chosenIgredientsUnit: itemValue
-                                            })
-                        }>
-                          <Picker.Item key="0" label="" value=""/>
+                        <Picker.Item key="1" label="ml" value="ml"/>
+                        <Picker.Item key="2" label="dcl" value="dcl"/>
+                        <Picker.Item key="3" label="l" value="l"/>
 
-                          <Picker.Item key="1" label="ml" value="ml"/>
-                          <Picker.Item key="2" label="dcl" value="dcl"/>
-                          <Picker.Item key="3" label="l" value="l"/>
+                        <Picker.Item key="4" label="g" value="g"/>
+                        <Picker.Item key="4" label="dkg" value="dkg"/>
+                        <Picker.Item key="5" label="kg" value="kg"/>
 
-                          <Picker.Item key="4" label="g" value="g"/>
-                          <Picker.Item key="4" label="dkg" value="dkg"/>
-                          <Picker.Item key="5" label="kg" value="kg"/>
+                        <Picker.Item key="6" label="pcs" value="pcs"/>
 
-                          <Picker.Item key="6" label="pcs" value="pcs"/>
+                        <Picker.Item key="7" label="tsp" value="tsp"/>
+                        <Picker.Item key="8" label="tbsp" value="tbsp"/>
 
-                          <Picker.Item key="7" label="tsp" value="tsp"/>
-                          <Picker.Item key="8" label="tbsp" value="tbsp"/>
+                        <Picker.Item key="9" label="cup" value="cup"/>
+                       </Picker>
 
-                          <Picker.Item key="9" label="cup" value="cup"/>
-                         </Picker>
+                        <Icon name='md-remove-circle' style={{color: ACC_DARK_PEACH}} onPress={() => this.removeIngredient(key)}/>
 
-                          <Icon name='md-remove-circle' style={{color: ACC_DARK_PEACH}} onPress={() => this.removeIngredient(key)}/>
+                  </Item>
+                )}
 
-                    </Item>
-                  )}
 
                   <Item>
-
                     <Picker
                       mode="dropdown"
                       style={{ width: "50%", color: ACC_DARK_PEACH }}
                       selectedValue={this.state.newIngredientName}
-                      onValueChange={(itemValue, itemIndex) => this.setState({
-                                         newIngredientName: itemValue
-                                       })
+                      onValueChange={(itemValue, itemIndex) =>
+                                        this.setState({
+                                          newIngredientName: itemValue
+                                        })
                       }>
-                      <Picker.Item key="0" label="" value=""/>
-                        {
-                          this.state.ingredients.map(ingredient =>
-                              <Picker.Item key={ingredient.key} label={ingredient.name} value={ingredient.name} />
-                          )
-                        }
+                          {PICKER_ITEMS}
                       </Picker>
 
                       <Input
                         style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
-                        placeholder=""
+                        value={this.state.newIgredientsAmount}
                         onChangeText={(text) =>
                           this.setState({
                             newIngredientAmount: text
@@ -344,7 +346,7 @@ class Header6 extends Component {  // eslint-disable-line
                         <Picker.Item key="9" label="cup" value="cup"/>
                        </Picker>
 
-                        <Icon name='md-add' style={{color: ACC_DARK_PEACH}} onPress={this.addNewIngredient.bind(this)}/>
+                      <Icon name='md-add' style={{color: ACC_DARK_PEACH}} onPress={this.addNewIngredient.bind(this)}/>
 
                   </Item>
 
@@ -364,53 +366,6 @@ function bindAction(dispatch) {
   };
 }
 /*
-
-            <Item floatingLabeldsfsff>
-               <Label style={{ color: ACC_DARK_PEACH}}>Title</Label>
-               <Input style={{ color: ACC_DARK_PEACH}}/>
-             </Item>
-
-             <Card>
-               <CardItem header button onPress={() => alert("This is Card Header")} style={{color: ACC_PEACH}} icenleft>
-                 <Icon name='md-add' style={{color: ACC_PEACH}}/>
-                 <Text style={{color: ACC_PEACH}}>Add Image</Text>
-               </CardItem>
-            </Card>
-
-                <Picker
-                  mode="dropdown"
-                   iosIcon={<Icon name="ios-arrow-down-outline" />}
-                  style={{ width: undefined, color: ACC_DARK_PEACH }}
-                  placeholder="Ďalšia ingrediencia"
-                  placeholderStyle={{ color: "#bfc6ea" }}
-                  placeholderIconColor="#007aff"
-                  selectedValue={this.state.selected2 || "Ďalšia ingrediencia"}
-                  onValueChange={this.onValueChange2.bind(this)}
-                >
-                  {DB.map(i => {return(
-                    <Picker.Item key={i} label={i} value={i} />)}
-                    )}
-                </Picker>
-
-
-                {this.state.selected2 &&
-                  <Picker
-                    mode="dropdown"
-                     iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    style={{ width: undefined, color: ACC_DARK_PEACH }}
-                    placeholder="Ďalšia ingrediencia"
-                    placeholderStyle={{ color: "#bfc6ea" }}
-                    placeholderIconColor="#007aff"
-                    selectedValue="Ďalšia ingrediencia"
-                    onValueChange={this.onValueChange2.bind(this)}
-                  >
-                    {DB.map(i => {return(
-                      <Picker.Item key={i} label={i} value={i} />)}
-                      )}
-                  </Picker>
-                }
-
-              <Textarea rowSpan={6} bordered style={{ backgroundColor: ACC_WHITE, color: ACC_CREAM}}  placeholder="Notes" />
 
 */
 const mapStateToProps = state => ({
