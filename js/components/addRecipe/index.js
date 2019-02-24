@@ -145,10 +145,20 @@ class Header6 extends Component {  // eslint-disable-line
       && this.state.newIngredientUnit !== ""
       && this.state.newIngredientAmount !== ""){
           let index = this.state.ingredients.filter(ing => ing.name === this.state.newIngredientName)[0].key;
+
+          let newChosenIingredientsName = {...this.state.chosenIgredientsName};
+          newChosenIingredientsName[index] = this.state.newIngredientName;
+
+          let newChosenIingredientsUnit = {...this.state.chosenIgredientsUnit};
+          newChosenIingredientsUnit[index] = this.state.newIngredientUnit;
+
+          let newChosenIingredientsAmount = {...this.state.chosenIgredientsAmount};
+          newChosenIingredientsAmount[index] = this.state.newIngredientAmount;
+
           this.setState({
-            chosenIgredientsUnit[index]: this.state.newIngredientName,
-            chosenIgredientsUnit[index]: this.state.newIngredientUnit,
-            chosenIgredientsAmount[index]: this.state.newIngredientAmount,
+            chosenIgredientsName: newChosenIingredientsName,
+            chosenIgredientsUnit: newChosenIingredientsUnit,
+            chosenIgredientsAmount: newChosenIingredientsAmount,
             newIngredientName: "",
             newIngredientUnit: "",
             newIngredientAmount: "",
@@ -219,9 +229,13 @@ class Header6 extends Component {  // eslint-disable-line
                         mode="dropdown"
                         style={{ width: "50%", color: ACC_DARK_PEACH }}
                         selectedValue={this.state.chosenIgredientsName[key]}
-                        onValueChange={(itemValue, itemIndex) => this.setState({
-                                           chosenIgredientsName[key]: itemValue
-                                         })
+                        onValueChange={(itemValue, itemIndex) => {
+                                        let newChosenIingredientsName = {...this.state.chosenIgredientsName};
+                                        newChosenIingredientsName[key] = itemValue;
+                                        this.setState({
+                                           chosenIgredientsName: newChosenIingredientsName,
+                                         });
+                                       }
                         }>
                         <Picker.Item key="0" label="" value=""/>
                           {
@@ -234,11 +248,13 @@ class Header6 extends Component {  // eslint-disable-line
                         <Input
                           style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
                           placeholder=""
-                          onChangeText={(text) =>
-                            this.setState({
-                              chosenIgredientsAmount[key]: text,
-                            })
-
+                          onChangeText={(text) =>{
+                                let newChosenIingredientsAmount = {...this.state.chosenIgredientsAmount};
+                                newChosenIingredientsAmount[key] = itemValue;
+                                this.setState({
+                                  chosenIgredientsAmount: newChosenIgredientsAmount,
+                                });
+                            }
                           }/>
 
                         <Picker
