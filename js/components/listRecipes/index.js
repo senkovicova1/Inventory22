@@ -40,6 +40,10 @@ class Header6 extends Component {  // eslint-disable-line
     this.fetch();
   }
 
+  componentDidMount(){
+    console.log("mounted");
+  }
+
   fetch(){
     rebase.fetch(`recipes`, {
       context: this,
@@ -61,8 +65,8 @@ class Header6 extends Component {  // eslint-disable-line
             withIds: true,
             asArray: true
           }).then((invAcc) => {
-              let accGrantedRec = recAcc.filter(acc => acc.userId === this.state.userID).map(acc => acc.recId);
-              let accGrantedInv = invAcc.filter(inv => inv.userId === this.state.userID).map(inv => inv.invId);
+              let accGrantedRec = recAcc.filter(acc => acc.userID === this.state.userID).map(acc => acc.recID);
+              let accGrantedInv = invAcc.filter(inv => inv.userID === this.state.userID).map(inv => inv.invID);
 
               this.setState({
                 recipes: rec.filter(recipe => accGrantedRec.includes(parseInt(recipe.key))),
@@ -81,7 +85,6 @@ class Header6 extends Component {  // eslint-disable-line
   }
 
   toggleSearch(){
-    console.log('heh');
     this.setState({
       searchOpen: !this.state.searchOpen,
     });
@@ -94,7 +97,6 @@ class Header6 extends Component {  // eslint-disable-line
   }
 
   render() {
-    console.log(this.state.data);
     return (
       <Container>
         <Header style={{ backgroundColor: ACC_TEAL}}>

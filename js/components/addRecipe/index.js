@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
-const DB = ["---","Basmati ryža","Sushi ryža", "Hl. múka", "Jablká", "Jahody", "Polotovarové palacinky", "Čerstvý losos", "Čokoláda", "Avokádo", "Ryžový ocot", "Cukor", "Soľ", "Sójovka"]
+import { rebase } from '../../../index.android';
 
 const ACC_VIO = 'rgb(124, 90, 150)';
 const ACC_CREAM = 'rgb(252, 244, 217)';
@@ -16,6 +16,11 @@ const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
 const ACC_TEAL = 'rgb(142, 210, 210)';
 const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
 const ACC_WHITE= 'rgb(255, 255, 255)';
+
+/*
+hexString = yourNumber.toString(16).toUpperCase();
+yourNumber = parseInt(hexString, 16);
+*/
 
 class Header6 extends Component {  // eslint-disable-line
   constructor(props) {
@@ -33,12 +38,15 @@ class Header6 extends Component {  // eslint-disable-line
 
         recipeIDs: [],
 
-        selected2: undefined
+        selected2: undefined,
 
         viaCode: false,
         viaForm: false,
       };
 
+
+      this.toggleCode.bind(this),
+      this.toggleForm.bind(this),
       this.fetch.bind(this);
       this.fetch();
     }
@@ -55,11 +63,38 @@ class Header6 extends Component {  // eslint-disable-line
           asArray: true
         }).then((rec) => {
           this.setState({
-            igredients,
+            ingredients,
             recipeIDs: rec.map(recipe => recipe.key)
           })
         });
       });
+    }
+
+    submit(){
+      console.log("meh");
+      let id = Date.now().toString(16).toUpperCase();
+
+      if (this.state.validCode){
+        rebase.post(`recipeAccess/${id}`, {
+          data: {userID: this.state.userID, recID: this.state.writtenCode}
+        }).then(newLocation => {
+        });
+      }
+      Actions.listRec();
+    }
+
+    toggleCode(){
+      console.log("ugh");
+      this.setState({
+        viaCode: !this.state.viaCode,
+      })
+    }
+
+    toggleForm(){
+      console.log("ugha");
+      this.setState({
+        viaForm: !this.state.viaForm,
+      })
     }
 
     onValueChange2(value: string) {
@@ -68,8 +103,21 @@ class Header6 extends Component {  // eslint-disable-line
       });
     }
 
+    handleWrittenCode(text){
+      if (this.state.recipeIDs.includes(text)){
+        this.setState({
+          validCode: true,
+          writtenCode: text,
+        });
+      } else {
+        this.setState({
+          validCode: false,
+          writtenCode: text,
+        });
+      }
+    }
+
   render() {
-    console.log(this.props);
     return (
       <Container>
         <Header style={{ backgroundColor: ACC_TEAL}}>
@@ -83,9 +131,9 @@ class Header6 extends Component {  // eslint-disable-line
           </Body>
           <Right>
             {
-              (this.state.validCode !== "" || this.state.title !== "")
+              (this.state.validCode || this.state.title !== "")
               &&
-            <Button transparent><Icon name="md-checkmark"  style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.pop()} /></Button>
+            <Button transparent><Icon name="md-checkmark"  style={{ color: ACC_DARK_TEAL}} onPress={()=> this.submit()} /></Button>
             }
         </Right>
 
@@ -93,16 +141,60 @@ class Header6 extends Component {  // eslint-disable-line
 
         <Content style={{ backgroundColor: ACC_CREAM}} >
 
-          <Button block light>
-                      <Text>Light</Text>
+          <Button block style={{ backgroundColor: ACC_PEACH}} onPress={this.toggleCode.bind(this)}>
+              <Text style={{ color: ACC_DARK_PEACH}}>Add Existing</Text>
           </Button>
 
+          {
+            this.state.viaCode
+            &&
+            <Item>
+              <Input
+                style={{ color: ACC_DARK_TEAL}}
+                placeholder="add recipe code"
+                onChangeText={(text) => this.handleWrittenCode(text)}/>
+            </Item>
+          }
+
+          {/*
+            !this.state.validCode
+            &&
+            <Item>
+              <Input
+                style={{ color: ACC_DARK_TEAL}}
+                placeholder="add recipe code"
+                onChangeText={(text) => this.handleWrittenCode(text)}/>
+            </Item>*/
+          }
+
+          <Button block style={{ backgroundColor: ACC_PEACH}} onPress={this.toggleForm.bind(this)}>
+              <Text style={{ color: ACC_DARK_PEACH}}>Create New</Text>
+          </Button>
+
+          {
+            this.state.viaForm
+            &&
+            <Text style={{ color: ACC_DARK_PEACH}}>yaya</Text>
+          }
+
+
+        </Content>
+      </Container>
+    );
+  }
+}
+
+function bindAction(dispatch) {
+  return {
+    openDrawer: () => dispatch(openDrawer()),
+  };
+}
+/*
 
             <Item floatingLabeldsfsff>
                <Label style={{ color: ACC_DARK_PEACH}}>Title</Label>
                <Input style={{ color: ACC_DARK_PEACH}}/>
              </Item>
-
 
              <Card>
                <CardItem header button onPress={() => alert("This is Card Header")} style={{color: ACC_PEACH}} icenleft>
@@ -146,18 +238,7 @@ class Header6 extends Component {  // eslint-disable-line
 
               <Textarea rowSpan={6} bordered style={{ backgroundColor: ACC_WHITE, color: ACC_CREAM}}  placeholder="Notes" />
 
-        </Content>
-      </Container>
-    );
-  }
-}
-
-function bindAction(dispatch) {
-  return {
-    openDrawer: () => dispatch(openDrawer()),
-  };
-}
-
+*/
 const mapStateToProps = state => ({
   navigation: state.cardNavigation,
   themeState: state.drawer.themeState,
