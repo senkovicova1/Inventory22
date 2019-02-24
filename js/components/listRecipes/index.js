@@ -18,51 +18,72 @@ const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
 const ACC_TEAL = 'rgb(142, 210, 210)';
 const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
 
-const INV = ['Jedlo z inventára Doma', 'Jedlo z inventára Záhrada','Jedlo z inventára VýletDecember2018','Jedlo z inventára Tajné'];
-
-const ITEMS = [
-  {title: 'Chlieb s maslom',
-  amount: 9,
-  },
-  {title: 'Špeci chlebík',
-  amount: 4,
-  },
-  {title: 'Sushi',
-  amount: 3,
-},
-  {title: 'Hummus',
-  amount: 2,
-  },
-  {title: 'Údený losos s ryžou a zeleninou',
-  amount: 2,
-},
-  {title: 'Mňam bryndzové halušky',
-  amount: 1,
-  },
-];
 
 class Header6 extends Component {  // eslint-disable-line
 
   constructor(props) {
     super(props);
     this.state = {
-      selected: "key1",
+      selectedInventory: "",
+
+      searchOpen: false,
+      searchedWord: '',
+
       recipes: [],
+      inventories: [],
+
+      userID: 1,
     };
+
+    this.toggleSearch.bind(this);
+    this.fetch.bind(this);
+    this.fetch();
   }
 
-  componentDidMount(){
-    rebase.syncState(`recipes`, {
+  fetch(){
+    rebase.fetch(`recipes`, {
       context: this,
-      state: 'recipes',
       withIds: true,
       asArray: true
-    });
+    }).then((rec) => {
+      rebase.fetch(`recipeAccess`, {
+        context: this,
+        withIds: true,
+        asArray: true
+      }).then((recAcc) => {
+        rebase.fetch(`inventories`, {
+          context: this,
+          withIds: true,
+          asArray: true
+        }).then((inv) => {
+          rebase.fetch(`inventoryAccess`, {
+            context: this,
+            withIds: true,
+            asArray: true
+          }).then((invAcc) => {
+              let accGrantedRec = recAcc.filter(acc => acc.userId === this.state.userID).map(acc => acc.recId);
+              let accGrantedInv = invAcc.filter(inv => inv.userId === this.state.userID).map(inv => inv.invId);
+
+              this.setState({
+                recipes: rec.filter(recipe => accGrantedRec.includes(parseInt(recipe.key))),
+                inventories: inv.filter(inventory => accGrantedInv.includes(parseInt(inventory.key))),
+              });
+            })
+          })
+        })
+      });
   }
 
   addItem(newItem){
     this.setState({
       recipes: this.state.recipes.concat([newItem]) //updates Firebase and the local state
+    });
+  }
+
+  toggleSearch(){
+    console.log('heh');
+    this.setState({
+      searchOpen: !this.state.searchOpen,
     });
   }
 
@@ -83,10 +104,26 @@ class Header6 extends Component {  // eslint-disable-line
             </Button>
           </Left>
           <Body>
+            { this.state.searchOpen
+            &&
+            <Item>
+              <Input
+                style={{ color: ACC_DARK_TEAL}}
+                placeholder="search"
+                onChangeText={(text) => this.setState({searchedWord: text})}/>
+            </Item>
+            }
+
+            {!this.state.searchOpen
+              &&
               <Title style={{ color: ACC_DARK_TEAL}}> Sonkine Recepty</Title>
+            }
+
           </Body>
           <Right>
-            <Button transparent><Icon name="search" style={{ color: ACC_DARK_TEAL}} /></Button>
+            <Button transparent onPress={this.toggleSearch.bind(this)} >
+              <Icon name="search" style={{ color: ACC_DARK_TEAL}} />
+            </Button>
             <Button transparent><Icon name="md-add" style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.addRec({nom:'jedlo'})} /></Button>
           </Right>
 
@@ -95,22 +132,22 @@ class Header6 extends Component {  // eslint-disable-line
         <Content padder style={{ backgroundColor: ACC_CREAM}} >
           <Picker
              mode="dropdown"
-             iosHeader="Select your SIM"
-             iosIcon={<Icon name="ios-arrow-down-outline" />}
              style={{color: ACC_TEAL /*, borderBottomWidth:10, borderBottomColor: ACC_PINK*/}}
              selectedValue={this.state.selected}
              onValueChange={this.onValueChange.bind(this)}
            >
-             { INV.map(i => {return(
-               <Picker.Item key={i} label={i} value={i}/>
-             )})
-           }
+             { this.state.inventories
+               .map(i =>
+                      <Picker.Item key={i.key} label={i.name} value={i.key}/>
+                    )
+             }
            </Picker>
 
 
           <List
-            dataArray={this.state.recipes} renderRow={data =>
-              <ListItem button noBorder onPress={() => Actions.detailRec({recId: data.key, recName: data.name, recSteps: data.postup}) }>
+            dataArray={this.state.recipes.filter(rec => rec.name.toLowerCase().includes(this.state.searchedWord.toLowerCase()))}
+            renderRow={data =>
+              <ListItem button noBorder onPress={() => Actions.detailRec({rec: data, userID: this.state.userID}) }>
                 <Left>
                   <Thumbnail
                     style={styles.stretch}
