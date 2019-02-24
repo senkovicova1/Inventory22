@@ -103,8 +103,6 @@ class Header6 extends Component {  // eslint-disable-line
       });
     }
 
-
-
     handleWrittenCode(text){
       if (this.state.recipeIDs.includes(text)){
         this.setState({
@@ -117,6 +115,12 @@ class Header6 extends Component {  // eslint-disable-line
           writtenCode: text,
         });
       }
+    }
+
+    handleWrittenCode(text){
+      this.setState({
+        title: text,
+      });
     }
 
   render() {
@@ -148,26 +152,16 @@ class Header6 extends Component {  // eslint-disable-line
           </Button>
 
           {
-            this.state.viaCode
+            this.state.viaCode && !this.state.validCode
             &&
             <Item>
               <Input
-                style={{ color: ACC_DARK_TEAL}}
+                style={{ backgroundColor: ACC_WHITE, color: ACC_PEACH}}
                 placeholder="add recipe code"
                 onChangeText={(text) => this.handleWrittenCode(text)}/>
             </Item>
           }
 
-          {/*
-            !this.state.validCode
-            &&
-            <Item>
-              <Input
-                style={{ color: ACC_DARK_TEAL}}
-                placeholder="add recipe code"
-                onChangeText={(text) => this.handleWrittenCode(text)}/>
-            </Item>*/
-          }
 
           <Button block style={{ backgroundColor: ACC_PEACH}} onPress={this.toggleForm.bind(this)}>
               <Text style={{ color: ACC_DARK_PEACH}}>Create New</Text>
@@ -176,7 +170,14 @@ class Header6 extends Component {  // eslint-disable-line
           {
             this.state.viaForm
             &&
-            <Text style={{ color: ACC_DARK_PEACH}}>yaya</Text>
+            <Form>
+              <Item>
+                <Input
+                  style={{ backgroundColor: ACC_WHITE, color: ACC_PEACH}}
+                  placeholder="Enter name"
+                  onChangeText={(text) => this.handleTitle(text)}/>
+              </Item>
+            </Form>
           }
 
 
