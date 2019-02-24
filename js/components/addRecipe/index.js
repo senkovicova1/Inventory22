@@ -103,6 +103,8 @@ class Header6 extends Component {  // eslint-disable-line
       });
     }
 
+
+
     handleWrittenCode(text){
       if (this.state.recipeIDs.includes(text)){
         this.setState({
