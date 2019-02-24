@@ -21,9 +21,47 @@ class Header6 extends Component {  // eslint-disable-line
   constructor(props) {
       super(props);
       this.state = {
+        userID: 1,
+
+        title: "",
+        body: "",
+        ingredients: [],
+        chosenIgredients: [],
+
+        writtenCode: "",
+        validCode: "",
+
+        recipeIDs: [],
+
         selected2: undefined
+
+        viaCode: false,
+        viaForm: false,
       };
+
+      this.fetch.bind(this);
+      this.fetch();
     }
+
+    fetch(){
+      rebase.fetch(`ingredients`, {
+        context: this,
+        withIds: true,
+        asArray: true
+      }).then((ingredients) => {
+        rebase.fetch(`recipes`, {
+          context: this,
+          withIds: true,
+          asArray: true
+        }).then((rec) => {
+          this.setState({
+            igredients,
+            recipeIDs: rec.map(recipe => recipe.key)
+          })
+        });
+      });
+    }
+
     onValueChange2(value: string) {
       this.setState({
         selected2: value
@@ -44,18 +82,27 @@ class Header6 extends Component {  // eslint-disable-line
             <Title style={{ color: ACC_DARK_TEAL}}>New Recipe</Title>
           </Body>
           <Right>
+            {
+              (this.state.validCode !== "" || this.state.title !== "")
+              &&
             <Button transparent><Icon name="md-checkmark"  style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.pop()} /></Button>
-          </Right>
+            }
+        </Right>
 
         </Header>
 
         <Content style={{ backgroundColor: ACC_CREAM}} >
+
+          <Button block light>
+                      <Text>Light</Text>
+          </Button>
 
 
             <Item floatingLabeldsfsff>
                <Label style={{ color: ACC_DARK_PEACH}}>Title</Label>
                <Input style={{ color: ACC_DARK_PEACH}}/>
              </Item>
+
 
              <Card>
                <CardItem header button onPress={() => alert("This is Card Header")} style={{color: ACC_PEACH}} icenleft>
