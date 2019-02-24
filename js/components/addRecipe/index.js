@@ -34,6 +34,7 @@ class Header6 extends Component {  // eslint-disable-line
         chosenIgredientsName: {},
         chosenIgredientsAmount: {},
         chosenIgredientsUnit: {},
+
         newIngredientName: "",
         newIngredientAmount: "",
         newIngredientUnit: "",
@@ -159,6 +160,7 @@ class Header6 extends Component {  // eslint-disable-line
             chosenIgredientsName: newChosenIingredientsName,
             chosenIgredientsUnit: newChosenIingredientsUnit,
             chosenIgredientsAmount: newChosenIingredientsAmount,
+
             newIngredientName: "",
             newIngredientUnit: "",
             newIngredientAmount: "",
@@ -311,12 +313,11 @@ class Header6 extends Component {  // eslint-disable-line
 
                       <Input
                         style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
-                        value={this.state.newIgredientsAmount}
+                        value={this.state.newIgredientAmount}
                         onChangeText={(text) =>
                           this.setState({
                             newIngredientAmount: text
                           })
-
                         }/>
 
                       <Picker
