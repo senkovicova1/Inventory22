@@ -33,7 +33,7 @@ class SideBar extends Component {
       userID: 1,
     };
   }
-
+/*
   this.fetch.bind(this);
   this.fetch();
   }
@@ -55,7 +55,7 @@ class SideBar extends Component {
         inventories: availableInv,
       })
     });
-  });
+  });*/
   }
 
 

@@ -7,6 +7,8 @@ import { Actions } from 'react-native-router-flux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
+import { rebase } from '../../../index.android';
+
 const ACC_VIO = 'rgb(124, 90, 150)';
 const ACC_CREAM = 'rgb(252, 244, 217)';
 const ACC_PEACH = 'rgb(255, 184, 95)';
