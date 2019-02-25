@@ -92,6 +92,24 @@ class Header6 extends Component {  // eslint-disable-line
         }).then(newLocation => {
         });
       }
+/*
+      if (this.state.title !== ""){
+        rebase.post(`recipeAccess/${id}`, {
+          data: {userID: this.state.userID, recID: id}
+        }).then(newLocation => {
+            let ings = {};
+            Object.keys(this.state.chosenIgredientsName).map(key => {
+              if (this.state.chosenIgredientsUnit[key] !== undefined && this.state.chosenIgredientsAmount[key] !== undefined){
+                ings[key] = this.state.chosenIgredientsAmount[key] + " " + this.state.chosenIgredientsUnit[key];
+              }
+              return 0;
+            });
+            rebase.post(`recipes/${id}`, {
+              data: {name: this.state.title, postup: this.state.body, ingredients: ings}
+            })
+        });
+      }*/
+
       Actions.listRec();
     }
 
@@ -351,6 +369,16 @@ class Header6 extends Component {  // eslint-disable-line
 
                   </Item>
 
+                  <Item>
+                      <Textarea
+                      rowSpan={5}
+                      bordered
+                      placeholder="Steps"
+                      onChangeText={(text) => this.setState({body: text})}
+                      value={this.state.body}/>
+                  </Item>
+
+
             </Form>
           }
 
@@ -366,9 +394,6 @@ function bindAction(dispatch) {
     openDrawer: () => dispatch(openDrawer()),
   };
 }
-/*
-
-*/
 const mapStateToProps = state => ({
   navigation: state.cardNavigation,
   themeState: state.drawer.themeState,
