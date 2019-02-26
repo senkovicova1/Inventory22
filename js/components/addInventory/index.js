@@ -19,6 +19,8 @@ class Header6 extends Component {  // eslint-disable-line
       super(props);
       this.state = {
         selected2: undefined
+
+        title: "",
       };
     }
     onValueChange2(value: string) {
@@ -41,17 +43,24 @@ class Header6 extends Component {  // eslint-disable-line
             <Title style={{ color: ACC_DARK_TEAL}}>New Inventory</Title>
           </Body>
           <Right>
+            { this.state.title
+              &&
             <Button transparent><Icon name="md-checkmark" style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.pop()} /></Button>
-          </Right>
+            }
+        </Right>
         </Header>
 
         <Content padder style={{ backgroundColor: ACC_CREAM}} >
 
-            <Item floatingLabel>
+            <Item>
                <Label style={{ color: ACC_DARK_PEACH }}>Title</Label>
                <Input style={{ color: ACC_DARK_PEACH }}/>
              </Item>
-              <Textarea rowSpan={6} style={{ color: ACC_CREAM, backgroundColor: ACC_PEACH }} bordered placeholder="Notes" />
+
+             <Item>
+               <Label style={{ color: ACC_DARK_PEACH }}>Notes</Label>
+               <Textarea rowSpan={6} style={{ color: ACC_CREAM, backgroundColor: ACC_PEACH }} bordered placeholder="Notes" />
+             </Item>
 
         </Content>
       </Container>
