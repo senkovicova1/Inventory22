@@ -92,7 +92,7 @@ class Header6 extends Component {  // eslint-disable-line
         }).then(newLocation => {
         });
       }
-/*
+
       if (this.state.title !== ""){
         rebase.post(`recipeAccess/${id}`, {
           data: {userID: this.state.userID, recID: id}
@@ -108,7 +108,7 @@ class Header6 extends Component {  // eslint-disable-line
               data: {name: this.state.title, postup: this.state.body, ingredients: ings}
             })
         });
-      }*/
+      }
 
       Actions.listRec();
     }
@@ -275,7 +275,7 @@ class Header6 extends Component {  // eslint-disable-line
                               let newChosenIingredientsAmount = {...this.state.chosenIgredientsAmount};
                               newChosenIingredientsAmount[key] = text;
                               this.setState({
-                                chosenIgredientsAmount: newChosenIgredientsAmount,
+                                chosenIgredientsAmount: newChosenIngredientsAmount,
                               });
                           }
                         }/>
@@ -368,15 +368,12 @@ class Header6 extends Component {  // eslint-disable-line
                       <Icon name='md-add' style={{color: ACC_DARK_PEACH}} onPress={this.addNewIngredient.bind(this)}/>
 
                   </Item>
-
-                  <Item>
-                      <Textarea
+                    <Textarea
                       rowSpan={5}
                       bordered
                       placeholder="Steps"
                       onChangeText={(text) => this.setState({body: text})}
                       value={this.state.body}/>
-                  </Item>
 
 
             </Form>

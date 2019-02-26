@@ -69,7 +69,7 @@ class Header6 extends Component {  // eslint-disable-line
               let accGrantedInv = invAcc.filter(inv => inv.userID === this.state.userID).map(inv => inv.invID);
 
               this.setState({
-                recipes: rec.filter(recipe => accGrantedRec.includes(parseInt(recipe.key))),
+                recipes: rec.filter(recipe => accGrantedRec.includes(recipe.key)),
                 inventories: inv.filter(inventory => accGrantedInv.includes(parseInt(inventory.key))),
               });
             })
