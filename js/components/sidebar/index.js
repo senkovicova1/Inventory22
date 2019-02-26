@@ -55,8 +55,8 @@ class SideBar extends Component {
         inventories: availableInv,
       })
     });
-  });*/
-  }
+  });
+  }*/
 
 
   render() {

@@ -18,7 +18,7 @@ class Header6 extends Component {  // eslint-disable-line
   constructor(props) {
       super(props);
       this.state = {
-        selected2: undefined
+        selected2: undefined,
 
         title: "",
       };
