@@ -9,6 +9,8 @@ import material from '../../../native-base-theme/variables/material';
 import { changePlatform, changeMaterial, closeDrawer } from '../../redux/actions/drawer';
 import styles from './style';
 
+import { rebase } from '../../../index.android';
+
 const ITEMS = ['Doma', 'Záhrada','VýletDecember2018','Tajné'];
 
 const ACC_VIO = 'rgb(69, 41, 92)';
@@ -24,9 +26,38 @@ class SideBar extends Component {
     this.state = {
       shadowOffsetWidth: 1,
       shadowRadius: 4,
-      showStuff:false
+      showStuff: false,
+
+      inventories: [],
+
+      userID: 1,
     };
   }
+/*
+  this.fetch.bind(this);
+  this.fetch();
+  }
+
+  fetch(){
+  rebase.fetch(`inventories`, {
+    context: this,
+    withIds: true,
+    asArray: true
+  }).then((inv) => {
+    rebase.fetch(`inventoryAccess`, {
+      context: this,
+      withIds: true,
+      asArray: true
+    }).then((invAcc) => {
+      let accessGranted = invAcc.filter(inventoryAcc => inventoryAcc.userID === this.state.userID).map(invAcc => incAcc.invID);
+      let availableInv = inv.filter(inventory => accessGranted.includes(inventory.key));
+      this.setState({
+        inventories: availableInv,
+      })
+    });
+  });
+  }*/
+
 
   render() {
     return (
@@ -62,38 +93,17 @@ class SideBar extends Component {
           {
             this.state.showStuff &&
               <List
-              dataArray={ITEMS} renderRow={data =>
-                <ListItem button noBorder  onPress={()=>{ Actions.listInv(); this.props.closeDrawer();}}>
+              dataArray={this.state.inventories} renderRow={data =>
+                <ListItem button noBorder  onPress={()=>{ Actions.listInv({data}); this.props.closeDrawer();}}>
                   <Left>
                     <Thumbnail
                       style={styles.stretch}
                       source={require('../../../sushi.jpg')}
                     />
-                    <Text style={{ color: ACC_DARK_PEACH }}>{data}</Text>
+                  <Text style={{ color: ACC_DARK_PEACH }}>{data.name}</Text>
                   </Left>
                 </ListItem> } />
               }
-
-              {
-                this.state.showStuff &&
-
-                    <ListItem button noBorder onPress={()=>{ Actions.listInv(); this.props.closeDrawer();}}>
-                      <Left>
-                        <Thumbnail
-                          style={styles.stretch}
-                          source={require('../../../sushi.jpg')}
-                        />
-                        <Text style={{ color: ACC_DARK_PEACH }}>Batoh</Text>
-                      </Left>
-                      <Right style={{ flex: 1 }}>
-                        <Badge
-                          style={{ borderRadius: 3, height: 25, width: 72, backgroundColor: ACC_TEAL  }}
-                        >
-                          <Text style={{fontSize: (Platform.OS === 'ios') ? 13 : 11, textAlign: 'center', marginTop: (Platform.OS === 'android') ? -3 : undefined, color: ACC_VIO}}>Zmenené</Text>
-                        </Badge>
-                      </Right>
-                    </ListItem>
-                  }
 
               {
                 this.state.showStuff &&
