@@ -7,31 +7,15 @@ import { Actions } from 'react-native-router-flux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
+import { rebase } from '../../../index.android';
+
 const ACC_VIO = 'rgb(124, 90, 150)';
 const ACC_CREAM = 'rgb(252, 244, 217)';
 const ACC_PEACH = 'rgb(255, 184, 95)';
 const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
 const ACC_TEAL = 'rgb(142, 210, 210)';
 const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
-
-const ITEMS = [
-  {name:"Sushi ryža",
-  amount:"200g"},
-  {name:"Čerstvý losos",
-  amount:"100g"},
-  {name:"Avokádo",
-  amount:"50g"},
-  {name:"Ryžový ocot",
-  amount:"30ml"},
-  {name:"Cukor",
-  amount:"5g"},
-  {name:"Soľ",
-  amount:"5g"},
-  {name:"Sójovka",
-  amount:"--"},
-]
-
-const DB = ["---","Basmati ryža","Sushi ryža", "Hl. múka", "Jablká", "Jahody", "Polotovarové palacinky", "Čerstvý losos", "Čokoláda", "Avokádo", "Ryžový ocot", "Cukor", "Soľ", "Sójovka"]
+const ACC_WHITE= 'rgb(255, 255, 255)';
 
 class EditRecipe extends Component {  // eslint-disable-line
 
@@ -43,79 +27,253 @@ class EditRecipe extends Component {  // eslint-disable-line
        name: this.props.name,
        key: this.props.keyy,
        body: this.props.body,
-       ingredients: this.props.ingredients,
+       ingredientsInRecipe: this.props.ingredients,
+       userID: 1,
+
+       ingredients: [],
+       chosenIgredientsName: {},
+       chosenIgredientsAmount: {},
+       chosenIgredientsUnit: {},
+
+       newIngredientName: "",
+       newIngredientAmount: "",
+       newIngredientUnit: "",
+
+
+       searchOpen: false,
+
      };
+
+
+     this.addNewIngredient.bind(this);
+     this.fetch.bind(this);
+     this.fetch();
+   }
+
+   fetch(){
+     rebase.fetch(`ingredients`, {
+       context: this,
+       withIds: true,
+       asArray: true
+     }).then((ingredients) =>
+         this.setState({
+           ingredients,
+         })
+       );
+   }
+
+   submit(){
+     console.log("meh");
+
+     let ings = {};
+     Object.keys(this.state.ingredientsInRecipe).map(key =>
+       ings[this.state.ingredientsInRecipe[key].key] = this.state.ingredientsInRecipe[key].amount);
+
+     rebase.update(`recipes/${this.state.key}`, {
+       data: {name: this.state.name, body: this.state.body, ingredients: ings}
+     });
+
+  //   Actions.goBack();
+   }
+
+   addNewIngredient(){
+     if (this.state.newIngredientName.length > 0
+     && this.state.newIngredientUnit.length > 0
+     && this.state.newIngredientAmount.length > 0){
+       let key = this.state.ingredients.filter(ing => ing.name === this.state.newIngredientName)[0].key;
+       let object = {key: key, name: this.state.newIngredientName, amount: this.state.newIngredientAmount + " " + this.state.newIngredientUnit};
+       let newIngredientsInRecipe = {...this.state.ingredientsInRecipe};
+       newIngredientsInRecipe[newIngredientsInRecipe.length] = object,
+         this.setState({
+           ingredientsInRecipe: newIngredientsInRecipe,
+
+           newIngredientName: "",
+           newIngredientUnit: "",
+           newIngredientAmount: "",
+         });
+     }
+   }
+
+   removeIngredient(key){
+     let newIngredientsInRecipe = {...this.state.ingredientsInRecipe};
+     delete newIngredientsInRecipe[key];
+       this.setState({
+         ingredientsInRecipe: newIngredientsInRecipe,
+       });
+
+   }
+
+ render() {
+     const PICKER_ITEMS = this.state.ingredients.map(ingredient =>
+           <Picker.Item key={ingredient.key} label={ingredient.name} value={ingredient.name} />
+       );
+      PICKER_ITEMS.unshift(<Picker.Item key="0" label="" value=""/>);
+
+   return (
+     <Container>
+       <Header style={{ backgroundColor: ACC_TEAL}}>
+         <Left>
+           <Button transparent onPress={() => Actions.pop()}>
+             <Icon name="md-close" style={{ color: ACC_DARK_TEAL}}/>
+           </Button>
+         </Left>
+         <Body>
+           <Title style={{ color: ACC_DARK_TEAL}}>Edit Recipe</Title>
+         </Body>
+         <Right>
+           <Button transparent><Icon name="md-checkmark"  style={{ color: ACC_DARK_TEAL}} onPress={()=> this.submit()} /></Button>
+
+       </Right>
+
+       </Header>
+
+       <Content style={{ backgroundColor: ACC_CREAM}} >
+
+           <Form>
+             <Item>
+               <Input
+                 style={{ backgroundColor: ACC_WHITE, color: ACC_PEACH}}
+                 placeholder="Enter name"
+                 value={this.state.name}
+                 onChangeText={(text) => this.setState({name: text})}/>
+             </Item>
+
+
+             {
+               Object.keys(this.state.ingredientsInRecipe).map(key =>
+                 <Item>
+                   <Picker
+                     mode="dropdown"
+                     style={{ width: "50%", color: ACC_DARK_PEACH }}
+                     selectedValue={this.state.ingredientsInRecipe[key].name}
+                     onValueChange={(itemValue, itemIndex) => {
+                                     let newIngredientsInRecipe = {...this.state.ingredientsInRecipe};
+                                     newIngredientsInRecipe[key].name = itemValue;
+                                     this.setState({
+                                        ingredientsInRecipe: newIngredientsInRecipe,
+                                      });
+                                    }
+                     }>
+                       {PICKER_ITEMS}
+                     </Picker>
+                     <Input
+                       style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
+                       value={this.state.ingredientsInRecipe[key].amount.substring(0, this.state.ingredientsInRecipe[key].amount.indexOf(" "))}
+                       placeholder=""
+                       onChangeText={(text) =>{
+                             let newIngredientsInRecipe = {...this.state.ingredientsInRecipe};
+                             let newValue = text + " " + this.state.ingredientsInRecipe[key].amount.substring(this.state.ingredientsInRecipe[key].amount.indexOf(" ")+1);
+                             newIngredientsInRecipe[key].amount = newValue;
+                             this.setState({
+                               ingredientsInRecipe: newIngredientsInRecipe,
+                             });
+                         }
+                       }/>
+
+                     <Picker
+                        mode="dropdown"
+                        style={{width: '25%', color: ACC_TEAL }}
+                        selectedValue={this.state.ingredientsInRecipe[key].amount.substring(this.state.ingredientsInRecipe[key].amount.indexOf(" ")+1)}
+                        onValueChange={(itemValue, itemIndex) =>{
+                                        let newIngredientsInRecipe = {...this.state.ingredientsInRecipe};
+                                        let newValue = this.state.ingredientsInRecipe[key].amount.substring(0, this.state.ingredientsInRecipe[key].amount.indexOf(" ")) + " " + itemValue;
+                                        newIngredientsInRecipe[key].amount = newValue;
+                                         this.setState({
+                                           ingredientsInRecipe: newIngredientsInRecipe,
+                                         });
+                                       }
+                     }>
+                       <Picker.Item key="0" label="" value=""/>
+
+                       <Picker.Item key="1" label="ml" value="ml"/>
+                       <Picker.Item key="2" label="dcl" value="dcl"/>
+                       <Picker.Item key="3" label="l" value="l"/>
+
+                       <Picker.Item key="4" label="g" value="g"/>
+                       <Picker.Item key="4" label="dkg" value="dkg"/>
+                       <Picker.Item key="5" label="kg" value="kg"/>
+
+                       <Picker.Item key="6" label="pcs" value="pcs"/>
+
+                       <Picker.Item key="7" label="tsp" value="tsp"/>
+                       <Picker.Item key="8" label="tbsp" value="tbsp"/>
+
+                       <Picker.Item key="9" label="cup" value="cup"/>
+                      </Picker>
+
+                       <Icon name='md-remove-circle' style={{color: ACC_DARK_PEACH}} onPress={() => this.removeIngredient(key)}/>
+
+                 </Item>
+               )}
+
+                 <Item>
+                   <Picker
+                     mode="dropdown"
+                     style={{ width: "50%", color: ACC_DARK_PEACH }}
+                     selectedValue={this.state.newIngredientName}
+                     onValueChange={(itemValue, itemIndex) =>
+                                       this.setState({
+                                         newIngredientName: itemValue
+                                       })
+                     }>
+                         {PICKER_ITEMS}
+                     </Picker>
+
+                     <Input
+                       style={{ width: '5%', backgroundColor: ACC_TEAL, color: ACC_PEACH}}
+                       value={this.state.newIgredientAmount}
+                       onChangeText={(text) =>
+                         this.setState({
+                           newIngredientAmount: text
+                         })
+                       }/>
+
+                     <Picker
+                        mode="dropdown"
+                        style={{width: '25%', color: ACC_TEAL /*, borderBottomWidth:10, borderBottomColor: ACC_PINK*/}}
+                        selectedValue={this.state.newIngredientUnit}
+                        onValueChange={(itemValue, itemIndex) =>
+                                         this.setState({
+                                           newIngredientUnit: itemValue
+                                         })
+                     }>
+                       <Picker.Item key="0" label="" value=""/>
+
+                       <Picker.Item key="1" label="ml" value="ml"/>
+                       <Picker.Item key="2" label="dcl" value="dcl"/>
+                       <Picker.Item key="3" label="l" value="l"/>
+
+                       <Picker.Item key="4" label="g" value="g"/>
+                       <Picker.Item key="4" label="dkg" value="dkg"/>
+                       <Picker.Item key="5" label="kg" value="kg"/>
+
+                       <Picker.Item key="6" label="pcs" value="pcs"/>
+
+                       <Picker.Item key="7" label="tsp" value="tsp"/>
+                       <Picker.Item key="8" label="tbsp" value="tbsp"/>
+
+                       <Picker.Item key="9" label="cup" value="cup"/>
+                      </Picker>
+
+                     <Icon name='md-add' style={{color: ACC_DARK_PEACH}} onPress={this.addNewIngredient.bind(this)}/>
+
+                 </Item>
+                   <Textarea
+                     rowSpan={5}
+                     bordered
+                     placeholder="Steps"
+                     onChangeText={(text) => this.setState({body: text})}
+                     value={this.state.body}/>
+
+
+           </Form>
+
+
+
+       </Content>
+     </Container>
+   );
  }
- onValueChange2(value: string) {
-   this.setState({
-     selected2: value
-   });
- }
-
-  render() {
-    console.log(this.props);
-    return (
-      <Container>
-        <Header style={{ backgroundColor: ACC_TEAL}}>
-          <Left>
-            <Button transparent onPress={() => Actions.pop()}>
-              <Icon name="md-close" style={{ color: ACC_DARK_TEAL}}/>
-            </Button>
-          </Left>
-          <Body>
-            <Title style={{ color: ACC_DARK_TEAL}}>Sushi</Title>
-          </Body>
-          <Right>
-            <Button transparent><Icon name="md-checkmark" style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.pop()} /></Button>
-          </Right>
-
-        </Header>
-
-        <Content padder style={{ backgroundColor: ACC_CREAM}} >
-
-          <Form>
-                 {
-                   ITEMS.map(item => {return (
-                       <Picker
-                         mode="dropdown"
-                         iosIcon={<Icon name="ios-arrow-down-outline" />}
-                         style={{ width: undefined, color: ACC_DARK_PEACH }}
-                         placeholder="Select your SIM"
-                         placeholderStyle={{ color: "#bfc6ea" }}
-                         placeholderIconColor="#007aff"
-                         selectedValue={item.name}
-                         onValueChange={this.onValueChange2.bind(this)}
-                       >
-                        {DB.map(i => {return(
-                          <Picker.Item key={i} label={i} value={i} />)}
-                          )}
-                       </Picker>
-                       )
-                     })
-                    }
-                    <Picker
-                      mode="dropdown"
-                       iosIcon={<Icon name="ios-arrow-down-outline" />}
-                      style={{ width: undefined, color: ACC_DARK_PEACH}}
-                      placeholder="Ďalšia ingrediencia"
-                      placeholderStyle={{ color: "#bfc6ea" }}
-                      placeholderIconColor="#007aff"
-                      selectedValue="Ďalšia ingrediencia"
-                      onValueChange={this.onValueChange2.bind(this)}
-                    >
-                      {DB.map(i => {return(
-                        <Picker.Item key={i} label={i} value={i} />)}
-                        )}
-                    </Picker>
-
-                  <Textarea rowSpan={6} bordered style={{ backgroundColor: ACC_PEACH, color: ACC_CREAM }} placeholder="Ryžu dajte doryžovarky a uvarte podľa návodu. Medzitým do hrnčeka nalejte ryžový ocot so soľou a cukrom a nechajte zovrieť. Cukor aj soľ by mali byť úplne rozspustené. Keď je ryža hotová, zmiešajte ju s prevareným octom a nechajte vychladnúť. Potom zrolujte sushi podľa youtube návodov.
-
-                   DO NOT FORGET: Sonka má rada menšie kúsky, Theri väčšie." />
-            </Form>
-        </Content>
-      </Container>
-    );
-  }
 }
 
 function bindAction(dispatch) {
