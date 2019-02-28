@@ -33,13 +33,18 @@ const ITEMS = [
 
 const DB = ["---","Basmati ryža","Sushi ryža", "Hl. múka", "Jablká", "Jahody", "Polotovarové palacinky", "Čerstvý losos", "Čokoláda", "Avokádo", "Ryžový ocot", "Cukor", "Soľ", "Sójovka"]
 
-class Header6 extends Component {  // eslint-disable-line
+class EditRecipe extends Component {  // eslint-disable-line
 
   constructor(props) {
    super(props);
    this.state = {
-     selected2: undefined
-   };
+     selected2: undefined,
+       showID: false,
+       name: this.props.name,
+       key: this.props.keyy,
+       body: this.props.body,
+       ingredients: this.props.ingredients,
+     };
  }
  onValueChange2(value: string) {
    this.setState({
@@ -124,4 +129,4 @@ const mapStateToProps = state => ({
   themeState: state.drawer.themeState,
 });
 
-export default connect(mapStateToProps, bindAction)(Header6);
+export default connect(mapStateToProps, bindAction)(EditRecipe);

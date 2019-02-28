@@ -105,7 +105,7 @@ class Header6 extends Component {  // eslint-disable-line
               return 0;
             });
             rebase.post(`recipes/${id}`, {
-              data: {name: this.state.title, postup: this.state.body, ingredients: ings}
+              data: {name: this.state.title, body: this.state.body, ingredients: ings}
             })
         });
       }
@@ -114,14 +114,12 @@ class Header6 extends Component {  // eslint-disable-line
     }
 
     toggleCode(){
-      console.log("ugh");
       this.setState({
         viaCode: !this.state.viaCode,
       })
     }
 
     toggleForm(){
-      console.log("ugha");
       this.setState({
         viaForm: !this.state.viaForm,
       })
@@ -255,11 +253,8 @@ class Header6 extends Component {  // eslint-disable-line
                       style={{ width: "50%", color: ACC_DARK_PEACH }}
                       selectedValue={this.state.chosenIgredientsName[key]}
                       onValueChange={(itemValue, itemIndex) => {
-                                      console.log("1");
                                       let newChosenIingredientsName = {...this.state.chosenIgredientsName};
-                                      console.log("2");
                                       newChosenIingredientsName[key] = itemValue;
-                                      console.log("3");
                                       this.setState({
                                          chosenIgredientsName: newChosenIingredientsName,
                                        });

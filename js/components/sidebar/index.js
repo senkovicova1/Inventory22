@@ -31,7 +31,7 @@ class SideBar extends Component {
       inventories: [],
       userID: 1,
     };
-  
+
 
   this.fetch.bind(this);
   this.fetch();
@@ -48,7 +48,7 @@ class SideBar extends Component {
       withIds: true,
       asArray: true
     }).then((invAcc) => {
-      let accessGranted = invAcc.filter(inventoryAcc => inventoryAcc.userID === this.state.userID).map(invAcc => incAcc.invID);
+      let accessGranted = invAcc.filter(inventoryAcc => inventoryAcc.userID === this.state.userID).map(invAcc => invAcc.invID.toString());
       let availableInv = inv.filter(inventory => accessGranted.includes(inventory.key));
       this.setState({
         inventories: availableInv,

@@ -41,7 +41,6 @@ class Header6 extends Component {  // eslint-disable-line
   }
 
   componentDidMount(){
-    console.log("mounted");
   }
 
   fetch(){
