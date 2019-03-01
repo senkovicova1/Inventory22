@@ -38,6 +38,7 @@ class SideBar extends Component {
   }
 
   fetch(){
+    /*Inventare v sidebare sa neupdatuju po pridani/zmeneni nejakeho inv*/
   rebase.fetch(`inventories`, {
     context: this,
     withIds: true,
@@ -56,7 +57,6 @@ class SideBar extends Component {
     });
   });
   }
-
 
   render() {
     return (

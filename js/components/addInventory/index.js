@@ -7,6 +7,8 @@ import { Actions } from 'react-native-router-flux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
+import { rebase } from '../../../index.android';
+
 const ACC_VIO = 'rgb(124, 90, 150)';
 const ACC_CREAM = 'rgb(252, 244, 217)';
 const ACC_PEACH = 'rgb(255, 184, 95)';
@@ -14,23 +16,32 @@ const ACC_DARK_PEACH = 'rgb(255, 122, 90)';
 const ACC_TEAL = 'rgb(142, 210, 210)';
 const ACC_DARK_TEAL = 'rgb(0, 170, 160)';
 
-class Header6 extends Component {  // eslint-disable-line
+class AddInventory extends Component {  // eslint-disable-line
   constructor(props) {
       super(props);
       this.state = {
-        selected2: undefined,
-
         title: "",
+        notes: "",
+        userID: 1,
       };
+      this.submit.bind(this);
     }
-    onValueChange2(value: string) {
-      this.setState({
-        selected2: value
+
+  submit(){
+    let id = Date.now().toString(16).toUpperCase();
+
+    rebase.post(`inventories/${id}`, {
+      data: {name: this.state.title, notes: this.state.notes}
+    }).then(newLocation => {
+      rebase.post(`inventoryAccess/${id}`, {
+        data: {invID: id, userID: this.state.userID}
       });
-    }
+    });
+
+    Actions.listInv();
+  }
 
   render() {
-    console.log(this.props);
     return (
       <Container>
         <Header style={{ backgroundColor: ACC_TEAL}}>
@@ -40,27 +51,34 @@ class Header6 extends Component {  // eslint-disable-line
             </Button>
           </Left>
           <Body>
-            <Title style={{ color: ACC_DARK_TEAL}}>New Inventory</Title>
+            <Title style={{ color: ACC_DARK_TEAL}}>Add Inventory</Title>
           </Body>
           <Right>
-            { this.state.title
+            { (this.state.title.length > 0)
               &&
-            <Button transparent><Icon name="md-checkmark" style={{ color: ACC_DARK_TEAL}} onPress={()=>Actions.pop()} /></Button>
+            <Button transparent><Icon name="md-checkmark" style={{ color: ACC_DARK_TEAL}} onPress={()=> this.submit()} /></Button>
             }
         </Right>
         </Header>
 
         <Content padder style={{ backgroundColor: ACC_CREAM}} >
 
-            <Item>
                <Label style={{ color: ACC_DARK_PEACH }}>Title</Label>
-               <Input style={{ color: ACC_DARK_PEACH }}/>
-             </Item>
+               <Input
+                 style={{ color: ACC_DARK_PEACH }}
+                 value={this.state.title}
+                 onChangeText={(text) => this.setState({title: text})}/>
 
-             <Item>
+
                <Label style={{ color: ACC_DARK_PEACH }}>Notes</Label>
-               <Textarea rowSpan={6} style={{ color: ACC_CREAM, backgroundColor: ACC_PEACH }} bordered placeholder="Notes" />
-             </Item>
+               <Textarea
+                 rowSpan={6}
+                 style={{ color: ACC_CREAM, backgroundColor: ACC_PEACH }}
+                 bordered
+                 placeholder="Notes"
+                 value={this.state.notes}
+                 onChangeText={(text) => this.setState({notes: text})} />
+
 
         </Content>
       </Container>
@@ -79,4 +97,4 @@ const mapStateToProps = state => ({
   themeState: state.drawer.themeState,
 });
 
-export default connect(mapStateToProps, bindAction)(Header6);
+export default connect(mapStateToProps, bindAction)(AddInventory);

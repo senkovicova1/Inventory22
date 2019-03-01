@@ -19,6 +19,8 @@ import DetailRecipe from './components/detailRecipe';
 import AddInventory from './components/addInventory';
 import EditInventory from './components/editInventory';
 
+import AddIngredient from './components/addIngredient';
+
 import Sidebar from './components/sidebar';
 
 const {
@@ -87,6 +89,7 @@ class AppNavigator extends Component {
               <Scene key="detailRec" component={DetailRecipe} />
               <Scene key="addInv" component={AddInventory} />
               <Scene key="editInv" component={EditInventory} />
+              <Scene key="addIng" component={AddIngredient} />
             </Scene>
           </RouterWithRedux>
         </Drawer>
