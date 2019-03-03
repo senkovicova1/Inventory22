@@ -17,4 +17,4 @@ db.settings(settings);
 export let rebase = Rebase.createClass(db);*/
 
 StatusBar.setBarStyle('default');
-AppRegistry.registerComponent('NativebaseKitchenSink', setup);
+AppRegistry.registerComponent('Inventory', setup);
