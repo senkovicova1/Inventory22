@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import { Container, Header, Title, Content, Thumbnail, Button, Icon, Left, Picker, Right, Body, Text, List, ListItem, CheckBox, Grid, Col, Badge, Form, Label, Input, Item } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import styles from './styles';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 
 import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
 import { rebase } from '../../../index.android';
-//import firebase from 'firebase';
+import firebase from 'firebase';
 
 const ACC_VIO = 'rgb(124, 90, 150)';
 const ACC_CREAM = 'rgb(252, 244, 217)';
@@ -33,6 +34,8 @@ class Header6 extends Component {  // eslint-disable-line
       inventories: [],
 
       userID: 1,
+
+      isSigninInProgress: false,
     };
 
     this.toggleSearch.bind(this);
@@ -42,6 +45,55 @@ class Header6 extends Component {  // eslint-disable-line
 
   componentDidMount(){
   }
+
+  onLoginOrRegister = () => {
+    console.log("auth");
+    GoogleSignin.signIn()
+      .then((data) => {
+        // Create a new Firebase credential with the token
+        const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken);
+        // Login with the credential
+        console.log(data);
+        console.log(credential);
+        return firebase.auth().signInWithCredential(credential);
+      })
+      .then((user) => {
+        console.log(user);
+        // If you need to do anything with the user, do it here
+        // The user will be logged in automatically by the
+        // `onAuthStateChanged` listener we set up in App.js earlier
+      })
+      .catch((error) => {
+        const { code, message } = error;
+        // For details of error codes, see the docs
+        // The message contains the default Firebase string
+        // representation of the error
+      });
+  }
+
+  signIn = async () => {
+    try {
+      console.log("eh");
+      await GoogleSignin.hasPlayServices();
+      console.log("eh1");
+      const userInfo = await GoogleSignin.signIn();
+      console.log("eh2");
+      this.setState({ userInfo });
+      console.log("heeere1");
+            console.log(userInfo);
+      console.log("heeere2");
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (f.e. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
 
   fetch(){
     rebase.fetch(`recipes`, {
@@ -131,6 +183,17 @@ class Header6 extends Component {  // eslint-disable-line
         </Header>
 
         <Content padder style={{ backgroundColor: ACC_CREAM}} >
+          <GoogleSigninButton
+              style={{ width: 192, height: 48 }}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={this.signIn}
+              disabled={this.state.isSigninInProgress} />
+
+          <Button transparent  onPress={() => this.onLoginOrRegister()}>
+            <Text>hello</Text>
+          </Button>
+
           <Picker
              mode="dropdown"
              style={{color: ACC_TEAL /*, borderBottomWidth:10, borderBottomColor: ACC_PINK*/}}
