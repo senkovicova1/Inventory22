@@ -9,6 +9,8 @@ import { actions } from 'react-native-navigation-redux-helpers';
 import { openDrawer } from '../../redux/actions/drawer';
 
 import { rebase } from '../../../index.android';
+import Login from '../login';
+
 //import firebase from 'firebase';
 
 const ACC_VIO = 'rgb(124, 90, 150)';
@@ -165,6 +167,7 @@ class Header6 extends Component {  // eslint-disable-line
               </ListItem>
             }
           />
+        {false &&<Login />}
 
 
         </Content>
